@@ -1,0 +1,15 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    overflow-y: hidden;
+}
+
+#canvas{
+    background-color:rgba(102, 89, 89, 0.507);
+    height: 100%;
+    width: 100%;
+}
