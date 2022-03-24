@@ -56,7 +56,7 @@ class Soldier extends Stats {
     remove_weapon() {
         this.attack -= this.weapon["attack"];
         this.defence -= this.weapon["defence"];
-        this.backpack = this.weapon;
+        this.backpack[Object.keys(this.weapon)] = this.weapon;
         this.weapon = undefined;
     }
 }
