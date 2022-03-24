@@ -12,13 +12,17 @@ function rainbowStop(h) {
     return ( rgb2hex(f(0), f(8), f(4)) );
 } 
 
-
-function rebuildGame() {
-    if (speedies.length > 0) {
-        speedies = [];
-        blinkies = [];
+function restartGame() {
+    if (blinkies.filter(item => item.alive==false).length == blinkies.length) {
+        rebuildGame();
     }
-    for (let i = 0; i < 10; i++) {
+}
+
+
+function rebuildGame(blink_amount=10, speed_amount=2) {
+    speedies = [];
+    blinkies = [];
+    for (let i = 0; i < blink_amount; i++) {
         blinkies.push(new Blinky({
             "x" : Math.round(Math.random() * canvas.width),
             "y" : Math.round(Math.random() * canvas.height)
@@ -27,7 +31,7 @@ function rebuildGame() {
         Math.random()));
     }
     
-    for (let i = 0; i < 2; i++) {
+    for (let i = 0; i < speed_amount; i++) {
         speedies.push(new Speedy({
             "x" : Math.random() * canvas.width,
             "y" : Math.random() * canvas.height
@@ -69,11 +73,10 @@ class Speedy extends Ghost {
     collision() {
         speedies.map(itemspeedy => {
             blinkies.map(itemblink => {
-                if (Math.abs(itemspeedy.location["x"] - itemblink.location["x"]) < 40 && Math.abs(itemspeedy.location["y"] - itemblink.location["y"] ) < 40) {
+                if (Math.abs(itemspeedy.location["x"] - itemblink.location["x"]) < 40 && Math.abs(itemspeedy.location["y"] - itemblink.location["y"] ) < 40 && itemblink.alive) {
                     itemblink.speed = 0;
                     itemblink.alive = false;
-                    itemspeedy.speed["x"] *= 1.001;
-                    console.log("collision")
+                    itemspeedy.speed["x"] *= 1.1;
                 }
             });
         })
@@ -129,7 +132,6 @@ class Blinky extends Ghost {
     }  
 
     teleport() {
-        // Checkar
         this.starting_dir = Math.random();
         this.location["x"] = Math.random()*canvas.width;
         this.location["y"] = Math.random()*canvas.height;
@@ -174,3 +176,4 @@ function render() {
 
 
 render();
+setInterval(restartGame, 1000);
