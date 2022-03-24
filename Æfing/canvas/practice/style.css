@@ -1,0 +1,34 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    overflow-y: hidden;
+}
+
+body {
+    color: white;
+}
+
+.header {
+    height: 40px;
+    background: black;
+    display:flex;
+    align-items: center;
+    justify-content: flex-end;
+    font-family: monospace;
+    font-size: 1.2em;
+}
+
+.header-items {
+    margin: 0 20px;
+}
+
+.score {
+    font-weight: bold;
+}
+
+#canvas {
+    width: 100%;
+    height: 100%;
+    background: grey;
+}
