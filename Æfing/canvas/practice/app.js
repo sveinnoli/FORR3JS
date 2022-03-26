@@ -43,7 +43,10 @@ class BallLogic {
 class Player extends BallLogic {
     constructor(x, y, xv, yv, color, size) {
         super(x, y, xv, yv, color, size);
-        this.counter = 0;
+        /* 
+            Make an array that keeps check of nearby items instead of checking all 
+            balls in the map each time
+        */
     }
 
     collision(collisionObj) {
@@ -52,19 +55,22 @@ class Player extends BallLogic {
             let dy = this.y - item.y;
             let length = Math.sqrt(dx**2 + dy**2);
             if (length < this.size+item.size) {
-                
+                // Need a way to translate the direction without affecting magnitude
+                this.xv *= Math.abs(item.xv)/item.xv;
+                this.yv *= Math.abs(item.yv)/item.yv;
+                let sizes = this.size*(Math.abs(item.xv)/item.xv) + item.size*(Math.abs(item.xv)/item.xv);
+                let newX = item.x + this.xv + sizes; 
+                let newY = item.y + this.yv + sizes;
+                if (newX > canvas.width || newX < 0) {
+                    //rotate 90° until it works
+                } else {
+                    this.x = newX;
+                }
 
-                // Find vector of collisionObj with player and increment that until out of range
-                item.xv < 0 ? this.xv *= -1 : this.xv;
-                item.yv < 0 ? this.yv *= -1 : this.yv;
-
-
-
-                while (length < this.size+item.size) {
-                    this.move();
-                    dx = item.x - this.x;
-                    dy = item.y - this.y;
-                    length = Math.sqrt(dx**2 + dy**2);
+                if (newY > canvas.height || newY < 0) {
+                    //rotate 90° until it works
+                } else {
+                    this.y = newY;
                 }
             }
         });
@@ -106,10 +112,10 @@ class GameLogic {
             this.players.push(new Player(
                 Math.random()*canvas.width,
                 Math.random()*canvas.height,
-                Math.random()*2 + 5,
-                Math.random()*1.5 + 3,
+                Math.random() > 0.5 ? -Math.random()*2+5 : Math.random()*2+5,
+                Math.random() > 0.5 ? -Math.random()*1.5-3 : Math.random()*1.5+3,
                 "blue",
-                50
+                2
             ));
         }
         
@@ -117,10 +123,10 @@ class GameLogic {
             this.computer.push(new AI(
                 Math.random()*canvas.width,
                 Math.random()*canvas.height,
-                Math.random()*2 + 5,
-                Math.random()*1.5 + 3,
+                Math.random() > 0.5 ? -Math.random()*5 : Math.random()*2+5,
+                Math.random() > 0.5 ? -Math.random()*3 : Math.random()*1.5+3,
                 "red",
-                25
+                10
             ))       
         }
     }
@@ -132,7 +138,7 @@ class GameLogic {
 
 }
 
-game = new GameLogic(1, 10);
+game = new GameLogic(50, 500);
 
 
 function looped() {
