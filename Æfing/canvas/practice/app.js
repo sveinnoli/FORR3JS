@@ -15,15 +15,17 @@ class BallLogic {
         this.size = size;
     }
 
-
-    move() {
+    boundaryCheck() {
         if (this.x + this.xv > canvas.width || this.x + this.xv < 0) {
             this.xv *= -1;
         } 
         if (this.y + this.yv > canvas.height || this.y + this.yv < 0) {
             this.yv *= -1;
         }
+    }
 
+    move() {
+        this.boundaryCheck();
         this.x += this.xv;
         this.y += this.yv;
 
@@ -42,6 +44,30 @@ class Player extends BallLogic {
     constructor(x, y, xv, yv, color, size) {
         super(x, y, xv, yv, color, size);
         this.counter = 0;
+    }
+
+    collision(collisionObj) {
+        collisionObj.map(item => {
+            let dx = this.x - item.x;
+            let dy = this.y - item.y;
+            let length = Math.sqrt(dx**2 + dy**2);
+            if (length < this.size+item.size) {
+                
+
+                // Find vector of collisionObj with player and increment that until out of range
+                item.xv < 0 ? this.xv *= -1 : this.xv;
+                item.yv < 0 ? this.yv *= -1 : this.yv;
+
+
+
+                while (length < this.size+item.size) {
+                    this.move();
+                    dx = item.x - this.x;
+                    dy = item.y - this.y;
+                    length = Math.sqrt(dx**2 + dy**2);
+                }
+            }
+        });
     }
 }
 
@@ -62,15 +88,16 @@ class GameLogic {
         this.generatePlayers();
     }
 
-    render() {
-        this.players.map(item => {
-            item.move(),
-            item.draw()
+    render() {        
+        this.computer.map(item => {
+            item.move();
+            item.draw();
         })
         
-        this.computer.map(item => {
-            item.move(),
-            item.draw()
+        this.players.map(item => {
+            item.move();
+            item.draw();
+            item.collision(this.computer);
         })
     }
 
@@ -82,7 +109,7 @@ class GameLogic {
                 Math.random()*2 + 5,
                 Math.random()*1.5 + 3,
                 "blue",
-                25
+                50
             ));
         }
         
@@ -99,7 +126,7 @@ class GameLogic {
     }
 
     clearScreen() {
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+        ctx.fillStyle = 'rgba(128, 128, 128, 0.3)';
         ctx.fillRect(0,0,canvas.width,canvas.height);
     }
 
