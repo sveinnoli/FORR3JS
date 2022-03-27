@@ -50,14 +50,14 @@ class Player extends BallLogic {
     }
 
     collision(collisionObj) {
-        for (let i = 0; i < collisionObj.length; i++) {
+        for (let i = collisionObj.length-1; i >= 0 ; i--) {
             let dx = this.x - collisionObj[i].x;
             let dy = this.y - collisionObj[i].y;
             let length = Math.sqrt(dx**2 + dy**2);
             if (length < this.size+collisionObj[i].size) {
                 // Need a way to translate the direction without affecting magnitude
-                this.xv *= Math.abs(collisionObj[i].xv)/collisionObj[i].xv;
-                this.yv *= Math.abs(collisionObj[i].yv)/collisionObj[i].yv;
+                collisionObj[i].xv < 0 ? this.xv *= -1 : this.xv *= 1;
+                collisionObj[i].yv < 0 ? this.yv *= -1 : this.yv *= 1;
                 let sizes = this.size*(Math.abs(collisionObj[i].xv)/collisionObj[i].xv) + collisionObj[i].size*(Math.abs(collisionObj[i].xv)/collisionObj[i].xv);
                 let newX = collisionObj[i].x + this.xv + sizes; 
                 let newY = collisionObj[i].y + this.yv + sizes;
@@ -86,21 +86,22 @@ class AI extends BallLogic {
 }
 
 class GameLogic {
-    constructor(numPlayers, numAI) {
+    constructor(numPlayers, numAI, size=25) {
         this.computer = [];
         this.players = [];
         this.numPlayers = numPlayers;
         this.numAI = numAI;       
+        this.size = size;
         this.generatePlayers();
     }
 
     render() {   
-        for (let i = 0; i < this.computer.length; i++) {
+        for (let i = this.computer.length-1; i >= 0; i--) {
             this.computer[i].move();
             this.computer[i].draw();
         } 
         
-        for (let i = 0; i < this.players.length; i++) {
+        for (let i = this.players.length-1; i >= 0  ; i--) {
             this.players[i].move();
             this.players[i].draw();
             this.players[i].collision(this.computer)
@@ -108,25 +109,25 @@ class GameLogic {
     }
 
     generatePlayers() {
-        for(let i = 0; i < this.numPlayers; i++) {
+        for(let i = this.numPlayers; i > 0; i-- ) {
             this.players.push(new Player(
                 Math.random()*canvas.width,
                 Math.random()*canvas.height,
                 Math.random() > 0.5 ? -Math.random()*2+5 : Math.random()*2+5,
                 Math.random() > 0.5 ? -Math.random()*1.5-3 : Math.random()*1.5+3,
                 "blue",
-                25
+                this.size
             ));
         }
         
-        for(let i = 0; i < this.numAI; i++) {
+        for(let i = this.numAI; i > 0; i--) {
             this.computer.push(new AI(
                 Math.random()*canvas.width,
                 Math.random()*canvas.height,
                 Math.random() > 0.5 ? -Math.random()*5 : Math.random()*2+5,
                 Math.random() > 0.5 ? -Math.random()*3 : Math.random()*1.5+3,
                 "red",
-                50
+                this.size
             ))       
         }
     }
@@ -138,7 +139,7 @@ class GameLogic {
 
 }
 
-game = new GameLogic(5, 100);
+game = new GameLogic(10, 1, size=25);
 
 
 function looped() {
