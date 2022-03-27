@@ -50,17 +50,17 @@ class Player extends BallLogic {
     }
 
     collision(collisionObj) {
-        collisionObj.map(item => {
-            let dx = this.x - item.x;
-            let dy = this.y - item.y;
+        for (let i = 0; i < collisionObj.length; i++) {
+            let dx = this.x - collisionObj[i].x;
+            let dy = this.y - collisionObj[i].y;
             let length = Math.sqrt(dx**2 + dy**2);
-            if (length < this.size+item.size) {
+            if (length < this.size+collisionObj[i].size) {
                 // Need a way to translate the direction without affecting magnitude
-                this.xv *= Math.abs(item.xv)/item.xv;
-                this.yv *= Math.abs(item.yv)/item.yv;
-                let sizes = this.size*(Math.abs(item.xv)/item.xv) + item.size*(Math.abs(item.xv)/item.xv);
-                let newX = item.x + this.xv + sizes; 
-                let newY = item.y + this.yv + sizes;
+                this.xv *= Math.abs(collisionObj[i].xv)/collisionObj[i].xv;
+                this.yv *= Math.abs(collisionObj[i].yv)/collisionObj[i].yv;
+                let sizes = this.size*(Math.abs(collisionObj[i].xv)/collisionObj[i].xv) + collisionObj[i].size*(Math.abs(collisionObj[i].xv)/collisionObj[i].xv);
+                let newX = collisionObj[i].x + this.xv + sizes; 
+                let newY = collisionObj[i].y + this.yv + sizes;
                 if (newX > canvas.width || newX < 0) {
                     //rotate 90° until it works
                 } else {
@@ -73,7 +73,7 @@ class Player extends BallLogic {
                     this.y = newY;
                 }
             }
-        });
+        }
     }
 }
 
@@ -94,17 +94,17 @@ class GameLogic {
         this.generatePlayers();
     }
 
-    render() {        
-        this.computer.map(item => {
-            item.move();
-            item.draw();
-        })
+    render() {   
+        for (let i = 0; i < this.computer.length; i++) {
+            this.computer[i].move();
+            this.computer[i].draw();
+        } 
         
-        this.players.map(item => {
-            item.move();
-            item.draw();
-            item.collision(this.computer);
-        })
+        for (let i = 0; i < this.players.length; i++) {
+            this.players[i].move();
+            this.players[i].draw();
+            this.players[i].collision(this.computer)
+        }
     }
 
     generatePlayers() {
@@ -115,7 +115,7 @@ class GameLogic {
                 Math.random() > 0.5 ? -Math.random()*2+5 : Math.random()*2+5,
                 Math.random() > 0.5 ? -Math.random()*1.5-3 : Math.random()*1.5+3,
                 "blue",
-                2
+                25
             ));
         }
         
@@ -126,19 +126,19 @@ class GameLogic {
                 Math.random() > 0.5 ? -Math.random()*5 : Math.random()*2+5,
                 Math.random() > 0.5 ? -Math.random()*3 : Math.random()*1.5+3,
                 "red",
-                10
+                50
             ))       
         }
     }
 
     clearScreen() {
-        ctx.fillStyle = 'rgba(128, 128, 128, 0.3)';
+        ctx.fillStyle = 'rgba(128, 128, 128, 0.2)';
         ctx.fillRect(0,0,canvas.width,canvas.height);
     }
 
 }
 
-game = new GameLogic(50, 500);
+game = new GameLogic(5, 100);
 
 
 function looped() {
