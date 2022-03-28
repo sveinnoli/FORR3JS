@@ -25,3 +25,4 @@ console.log(database["statistics"]["average_age"]);
 let regx = /peter/i;
 
 console.log(database["people"][0]["name"].match(regx));
+
