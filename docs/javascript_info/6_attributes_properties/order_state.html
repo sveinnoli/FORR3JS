@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        
+        .order[data-order-state="new"] {
+            color:green;
+        }
+
+        .order[data-order-state="pending"] {
+            color: blue;
+        }
+
+        .order[data-order-state="canceled"] {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div id="order" class="order" data-order-state="new">
+        A new order.
+    </div>
+
+    <script>
+        // Read
+        alert(order.dataset.orderState);
+        
+        // Modify
+        order.dataset.orderState = "pending";
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        /* styles rely on the custom attribute "order-state" */
+        .order[order-state="new"] {
+          color: green;
+        }
+      
+        .order[order-state="pending"] {
+          color: blue;
+        }
+      
+        .order[order-state="canceled"] {
+          color: red;
+        }
+        body {
+            background: darkgrey;
+        }
+      </style>
+      
+
+</head>
+<body >
+    <div id="divboy" data="supercooldata" secret="somesecretkey"></div>
+    <div class="order" order-state="new">
+        A new order.
+      </div>
+      
+      <div class="order" order-state="pending">
+        A pending order.
+      </div>
+      
+      <div class="order" order-state="canceled">
+        A canceled order.
+      </div>
+
+      <!-- mark the div to show "name" here -->
+     <div show-info="name"></div>
+     <!-- and age here -->
+     <div show-info="age"></div>
+</body>
+
+<script>
+    data = document.getElementById("divboy");
+    console.log(data.dataset)
+    for(let attr of data.attributes) {
+        console.log(`${attr.name} = ${attr.value}`);
+        console.dir(attr);
+    } 
+
+      // the code finds an element with the mark and shows what's requested
+    let user = {
+        name: "Pete",
+        age: 25
+    };
+
+    for(let div of document.querySelectorAll('[show-info]')) {
+        // insert the corresponding info into the field
+        let field = div.getAttribute('show-info');
+        div.innerHTML = user[field]; // first Pete into "name", then 25 into "age"
+  }
+    
+
+    
+</script>
+</html>

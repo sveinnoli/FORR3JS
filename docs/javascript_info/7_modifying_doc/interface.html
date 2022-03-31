@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <ul id="cart">
+
+    </ul>
+    <script>
+        let stuff = [];
+        while (true) {
+            let question = prompt("Enter an item: ");
+            if (!question) {
+                break;
+            }
+            stuff.push(question);
+        }
+        
+        let fragment = new DocumentFragment();
+        list = document.getElementById("cart");
+        stuff.map(item=> {
+            newElem = document.createElement("li");
+            newElem.textContent = item;
+            fragment.append(newElem);
+        })
+        list.append(fragment);
+        
+    </script>
+</body>
+</html>
